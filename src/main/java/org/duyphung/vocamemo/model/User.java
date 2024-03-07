@@ -35,11 +35,8 @@ public class User {
 
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Role role;
 
     public User(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {
         this.userName = userName;

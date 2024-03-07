@@ -1,7 +1,6 @@
 package org.duyphung.vocamemo.sercurity;
 
 import org.duyphung.vocamemo.model.User;
-import org.duyphung.vocamemo.service.UserDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 

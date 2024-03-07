@@ -7,22 +7,23 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserPrincipal implements UserDetails {
-    private User user;
-    private List<Role> roles;
+    private final User user;
+    private final Role role;
 
-    public UserPrincipal(User user, List<Role> roles) {
+    public UserPrincipal(User user, Role role) {
         super();
         this.user = user;
-        this.roles = roles;
+        this.role = role;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return Collections.singleton(new SimpleGrantedAuthority(role.getName()));
     }
 
     @Override

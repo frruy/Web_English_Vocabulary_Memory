@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,13 +71,8 @@ public class UserServiceImpl implements UserService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         User user = modelMapper.map(userDTO, User.class);
 
-        Role role = new Role(userDTO.getRole());
-        List<Role> roles = new ArrayList<>();
-        roles.add(role);
-        user.setRoles(roles);
-
         user.setPassword(encoder.encode(user.getPassword()));
-//        user.setRoles(Arrays.asList(roleService.findRoleByRoleName(userDTO.getRole())));
+        user.setRole(roleService.findRoleByRoleName(userDTO.getRole()));
 
         userRepository.save(user);
     }

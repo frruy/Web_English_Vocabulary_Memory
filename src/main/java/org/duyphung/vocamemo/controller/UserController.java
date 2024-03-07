@@ -56,13 +56,6 @@ public class UserController {
         return "login";
     }
 
-//    @GetMapping("/login?error=true")
-//    public String getLoginFailPage()
-//    {
-//        log.info("Login failed page displayed");
-//        return "fail";
-//    }
-
     @RequestMapping("/home")
     public String getHome()
     {

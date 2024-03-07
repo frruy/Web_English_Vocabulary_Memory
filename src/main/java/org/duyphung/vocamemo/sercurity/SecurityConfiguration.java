@@ -47,8 +47,8 @@ public class SecurityConfiguration {
                         (auth) -> auth
                                 .requestMatchers("/", "/login*",
                                         "/css/*", "/js/*", "/sign-up", "/signup-process", "/add-role").permitAll()
-                                .requestMatchers("/home").hasAnyRole("USER", "ADMIN", "GUEST")
-                                .anyRequest().authenticated()
+//                                .requestMatchers("/home").hasAnyRole("USER", "ADMIN")
+//                                .anyRequest().authenticated()
                 )
 
                 .formLogin(form -> form

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -28,32 +29,39 @@ public class User {
 
     private String email;
 
-    private int targetWordsPerWeek;
+    private String phone;
+
+    private String zip;
 
     private String password;
 
-    @ManyToOne(targetEntity = Role.class, cascade = CascadeType.ALL)
-    private Role role;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
-    public User(String userName, String firstName, String lastName, String email, String password, int targetWordsPerWeek) {
+    public User(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.phone = phone;
+        this.zip = zip;
         this.password = password;
-        this.targetWordsPerWeek = targetWordsPerWeek;
+
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return id == user.id && Objects.equals(userName, user.userName) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(targetWordsPerWeek, user.targetWordsPerWeek);
+        return id == user.id && Objects.equals(userName, user.userName) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(phone, user.phone) && Objects.equals(zip, user.zip) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, firstName, lastName, email, password, targetWordsPerWeek);
+        return Objects.hash(id, userName, firstName, lastName, email, phone, zip, password);
     }
 }
 

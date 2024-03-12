@@ -1,21 +1,19 @@
 package org.duyphung.vocamemo.sercurity;
 
-import org.duyphung.vocamemo.model.Role;
-import org.duyphung.vocamemo.model.User;
+import org.duyphung.vocamemo.model.RoleEntity;
+import org.duyphung.vocamemo.model.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserPrincipal implements UserDetails {
-    private final User user;
-    private final Role role;
+    private final UserEntity user;
+    private final RoleEntity role;
 
-    public UserPrincipal(User user, Role role) {
+    public UserPrincipal(UserEntity user, RoleEntity role) {
         super();
         this.user = user;
         this.role = role;

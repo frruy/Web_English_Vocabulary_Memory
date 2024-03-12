@@ -1,7 +1,7 @@
 package org.duyphung.vocamemo.service;
 
 
-import org.duyphung.vocamemo.model.Role;
+import org.duyphung.vocamemo.model.RoleEntity;
 import org.duyphung.vocamemo.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,23 +20,23 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public void saveRole(Role role) {
+    public void saveRole(RoleEntity role) {
         roleRepository.save(role);
     }
 
     @Override
     @Transactional
-    public Role findRoleByRoleName(String name) {
+    public RoleEntity findRoleByRoleName(String name) {
         return roleRepository.findRoleByName(name);
     }
 
     @Override
-    public List<Role> getAllRoles() {
-        return (List<Role>) roleRepository.findAll();
+    public List<RoleEntity> getAllRoles() {
+        return (List<RoleEntity>) roleRepository.findAll();
     }
 
     @Override
-    public Role getRolesByUser(long id) {
+    public RoleEntity getRolesByUser(long id) {
         return roleRepository.findRoleByUser(id);
     }
 }

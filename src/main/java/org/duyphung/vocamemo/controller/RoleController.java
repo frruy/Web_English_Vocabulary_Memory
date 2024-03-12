@@ -1,6 +1,6 @@
 package org.duyphung.vocamemo.controller;
 
-import org.duyphung.vocamemo.model.Role;
+import org.duyphung.vocamemo.model.RoleEntity;
 import org.duyphung.vocamemo.service.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,8 @@ public class RoleController {
 
     @GetMapping("/add-role")
     public String addRole() {
-        roleService.saveRole(new Role("ROLE_ADMIN"));
-        roleService.saveRole(new Role("ROLE_USER"));
+        roleService.saveRole(new RoleEntity("ROLE_ADMIN"));
+        roleService.saveRole(new RoleEntity("ROLE_USER"));
         return "fail";
     }
 }

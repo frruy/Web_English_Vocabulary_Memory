@@ -1,22 +1,14 @@
 package org.duyphung.vocamemo.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.util.Collection;
 import java.util.Objects;
 
+@Data
 @Entity
-@Setter
-@Getter
-@NoArgsConstructor
-@ToString
 @Table(name = "user")
-public class User {
-
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -35,10 +27,10 @@ public class User {
 
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Role role;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = RoleEntity.class)
+    private RoleEntity role;
 
-    public User(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {
+    public UserEntity(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,10 +41,14 @@ public class User {
 
     }
 
+    public UserEntity() {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User user)) return false;
+        if (!(o instanceof UserEntity user)) return false;
         return id == user.id && Objects.equals(userName, user.userName) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(phone, user.phone) && Objects.equals(zip, user.zip) && Objects.equals(password, user.password);
     }
 

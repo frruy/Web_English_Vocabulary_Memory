@@ -2,8 +2,8 @@ package org.duyphung.vocamemo.service;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.duyphung.vocamemo.model.Role;
-import org.duyphung.vocamemo.model.User;
+import org.duyphung.vocamemo.model.RoleEntity;
+import org.duyphung.vocamemo.model.UserEntity;
 import org.duyphung.vocamemo.repository.UserRepository;
 import org.duyphung.vocamemo.sercurity.UserDTO;
 import org.duyphung.vocamemo.sercurity.UserPrincipal;
@@ -17,10 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUserName(userName);
+        UserEntity user = userRepository.findUserByUserName(userName);
         log.debug(userName);
         if (user == null) {
             log.warn("Invalid username or password {}", userName);
@@ -56,7 +53,7 @@ public class UserServiceImpl implements UserService {
         return new UserPrincipal(user, roleService.getRolesByUser(user.getId()));
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<RoleEntity> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 
@@ -69,7 +66,7 @@ public class UserServiceImpl implements UserService {
     {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        User user = modelMapper.map(userDTO, User.class);
+        UserEntity user = modelMapper.map(userDTO, UserEntity.class);
 
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole(roleService.findRoleByRoleName(userDTO.getRole()));
@@ -79,12 +76,12 @@ public class UserServiceImpl implements UserService {
 
     /**    * In this example login and email has the same values @param email @return
      */
-    public User findUserByEmail(String email)
+    public UserEntity findUserByEmail(String email)
     {
         return userRepository.findUserByEmail(email);
     }
 
-    public User findUserByName(String name)
+    public UserEntity findUserByName(String name)
     {
         return userRepository.findUserByUserName(name);
     }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -41,7 +42,19 @@ public class WordEntity {
     private Set<ReviewEntity> reviews;
 
     @OneToMany(mappedBy = "wordEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MeaningEntity> meanings;
+    private Set<MeaningEntity> meanings = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "word_user",
+            joinColumns = @JoinColumn(name = "word_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<UserEntity> users = new HashSet<>();
+
+    public void addUser(UserEntity user) {
+        users.add(user);
+    }
 
     @Override
     public boolean equals(Object o) {

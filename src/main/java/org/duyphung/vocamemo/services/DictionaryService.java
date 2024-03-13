@@ -5,19 +5,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import org.duyphung.vocamemo.models.DefinitionEntity;
 import org.duyphung.vocamemo.models.MeaningEntity;
-import org.duyphung.vocamemo.models.ReviewEntity;
+import org.duyphung.vocamemo.models.UserEntity;
 import org.duyphung.vocamemo.models.WordEntity;
 import org.duyphung.vocamemo.reponses.DefinitionResponse;
 import org.duyphung.vocamemo.reponses.MeaningResponse;
 import org.duyphung.vocamemo.reponses.PhoneticResponse;
 import org.duyphung.vocamemo.reponses.WordResponse;
 import org.duyphung.vocamemo.repositories.WordRepository;
+import org.duyphung.vocamemo.utils.SectionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +30,7 @@ public class DictionaryService {
         this.wordRepository = wordRepository;
     }
 
-    public ResponseEntity<WordResponse> getWordDefinition(String word) {
+    public WordResponse getWordResponse(String word) {
         RestTemplate restTemplate = new RestTemplate();
         String url = API_URL + word;
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -39,13 +39,19 @@ public class DictionaryService {
         JsonArray jsonArray = JsonParser.parseString(Objects.requireNonNull(response.getBody())).getAsJsonArray();
 
         WordResponse[] responses = gson.fromJson(jsonArray, WordResponse[].class);
-        saveWordDefinition(responses[0]);
-        return null;
+        return responses[0];
     }
 
-    public void saveWordDefinition(WordResponse wordResponse) {
+    public void saveWord(WordResponse wordResponse) {
         WordEntity wordEntity = mapToWordEntity(wordResponse);
+        wordEntity.addUser(SectionHelper.getUserFromSection());
         wordRepository.save(wordEntity);
+    }
+
+    public Set<WordEntity> getWord() {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1);
+        return wordRepository.findTop5ByUsersIsOrderByCreatedAt(1);
     }
 
     public WordEntity mapToWordEntity(WordResponse wordResponse) {

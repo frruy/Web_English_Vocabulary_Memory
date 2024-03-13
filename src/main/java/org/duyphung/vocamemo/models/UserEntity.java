@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Entity
@@ -30,6 +31,9 @@ public class UserEntity {
     @ManyToOne(targetEntity = RoleEntity.class)
     private RoleEntity role;
 
+    @ManyToMany(mappedBy = "users")
+    private Set<WordEntity> words;
+
     public UserEntity(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {
         this.userName = userName;
         this.firstName = firstName;
@@ -43,6 +47,14 @@ public class UserEntity {
 
     public UserEntity() {
 
+    }
+
+    public void addWord(WordEntity wordEntity) {
+        words.add(wordEntity);
+    }
+
+    public void removeWord(WordEntity wordEntity) {
+        words.remove(wordEntity);
     }
 
     @Override

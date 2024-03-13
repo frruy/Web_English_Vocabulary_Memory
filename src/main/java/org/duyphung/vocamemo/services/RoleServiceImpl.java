@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public RoleServiceImpl(RoleRepository roleRepository) {
@@ -33,11 +33,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleEntity> getAllRoles() {
         return (List<RoleEntity>) roleRepository.findAll();
-    }
-
-    @Override
-    public RoleEntity getRolesByUser(long id) {
-        return roleRepository.findRoleByUser(id);
     }
 }
 

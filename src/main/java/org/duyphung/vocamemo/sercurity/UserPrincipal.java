@@ -31,7 +31,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.user.getEmail();
+        return this.user.getUserName();
     }
 
     @Override
@@ -52,5 +52,13 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public RoleEntity getRole() {
+        return role;
     }
 }

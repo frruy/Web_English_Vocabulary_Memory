@@ -11,7 +11,7 @@ import java.util.Objects;
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
     private String name;
     public RoleEntity(String name) {
         this.name = name;

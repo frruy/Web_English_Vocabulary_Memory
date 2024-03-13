@@ -19,6 +19,8 @@ public class ReviewEntity {
     private Timestamp createdAt;
     @ManyToMany(mappedBy = "reviews")
     private Set<WordEntity> words;
+    @ManyToOne(targetEntity = UserEntity.class)
+    private UserEntity user;
 
     @Override
     public boolean equals(Object o) {

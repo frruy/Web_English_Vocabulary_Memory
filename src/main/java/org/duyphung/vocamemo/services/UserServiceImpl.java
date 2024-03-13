@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         }
         // return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),   mapRolesToAuthorities(user.getRoles()));
 
-        return new UserPrincipal(user, roleService.getRolesByUser(user.getId()));
+        return new UserPrincipal(user, user.getRole());
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<RoleEntity> roles) {

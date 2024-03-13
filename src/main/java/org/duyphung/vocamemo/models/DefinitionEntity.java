@@ -1,4 +1,4 @@
-package org.duyphung.vocamemo.model;
+package org.duyphung.vocamemo.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Data
 @Entity
-@Table(name = "definition", catalog = "")
+@Table(name = "definition")
 public class DefinitionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -17,6 +17,10 @@ public class DefinitionEntity {
     private String definition;
     @Column(name = "example")
     private String example;
+
+    @ManyToOne()
+    @JoinColumn(name = "meaning_id", nullable = false)
+    private MeaningEntity meaningEntity;
 
     @Override
     public boolean equals(Object o) {

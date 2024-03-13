@@ -1,7 +1,7 @@
 package org.duyphung.vocamemo.sercurity;
 
-import org.duyphung.vocamemo.model.RoleEntity;
-import org.duyphung.vocamemo.model.UserEntity;
+import org.duyphung.vocamemo.models.RoleEntity;
+import org.duyphung.vocamemo.models.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

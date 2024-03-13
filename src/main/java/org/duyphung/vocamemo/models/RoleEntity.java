@@ -1,4 +1,4 @@
-package org.duyphung.vocamemo.model;
+package org.duyphung.vocamemo.models;
 
 import jakarta.persistence.*;
 import lombok.*;

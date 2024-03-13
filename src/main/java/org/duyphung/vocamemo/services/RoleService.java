@@ -1,7 +1,7 @@
-package org.duyphung.vocamemo.service;
+package org.duyphung.vocamemo.services;
 
 
-import org.duyphung.vocamemo.model.RoleEntity;
+import org.duyphung.vocamemo.models.RoleEntity;
 
 import java.util.List;
 

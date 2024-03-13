@@ -1,7 +1,7 @@
-package org.duyphung.vocamemo.controller;
+package org.duyphung.vocamemo.controllers;
 
-import org.duyphung.vocamemo.model.RoleEntity;
-import org.duyphung.vocamemo.service.RoleServiceImpl;
+import org.duyphung.vocamemo.models.RoleEntity;
+import org.duyphung.vocamemo.services.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package org.duyphung.vocamemo.service;
+package org.duyphung.vocamemo.services;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

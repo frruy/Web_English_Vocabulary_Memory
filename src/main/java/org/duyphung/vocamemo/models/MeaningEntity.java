@@ -1,4 +1,4 @@
-package org.duyphung.vocamemo.model;
+package org.duyphung.vocamemo.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Data
 @Entity
-@Table(name = "meaning", catalog = "")
+@Table(name = "meaning")
 public class MeaningEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -16,8 +16,12 @@ public class MeaningEntity {
     private int id;
     @Column(name = "partOfSpeech")
     private String partOfSpeech;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, targetEntity = DefinitionEntity.class)
+    @OneToMany(mappedBy = "meaningEntity", cascade = CascadeType.ALL, targetEntity = DefinitionEntity.class)
     private List<DefinitionEntity> definitions;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "word_id", nullable = false)
+    private WordEntity wordEntity;
 
     @Override
     public boolean equals(Object o) {

@@ -1,4 +1,4 @@
-package org.duyphung.vocamemo.model;
+package org.duyphung.vocamemo.models;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +27,7 @@ public class UserEntity {
 
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = RoleEntity.class)
+    @ManyToOne(targetEntity = RoleEntity.class)
     private RoleEntity role;
 
     public UserEntity(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {

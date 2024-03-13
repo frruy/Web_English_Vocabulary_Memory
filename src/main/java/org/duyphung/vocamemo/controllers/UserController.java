@@ -1,8 +1,8 @@
-package org.duyphung.vocamemo.controller;
+package org.duyphung.vocamemo.controllers;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.duyphung.vocamemo.service.UserServiceImpl;
+import org.duyphung.vocamemo.services.UserServiceImpl;
 import org.duyphung.vocamemo.sercurity.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;

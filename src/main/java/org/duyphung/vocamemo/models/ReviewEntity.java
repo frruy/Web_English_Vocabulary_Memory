@@ -1,14 +1,15 @@
-package org.duyphung.vocamemo.model;
+package org.duyphung.vocamemo.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "review", catalog = "")
+@Table(name = "review")
 public class ReviewEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -16,6 +17,8 @@ public class ReviewEntity {
     private int id;
     @Column(name = "createdAt")
     private Timestamp createdAt;
+    @ManyToMany(mappedBy = "reviews")
+    private Set<WordEntity> words;
 
     @Override
     public boolean equals(Object o) {

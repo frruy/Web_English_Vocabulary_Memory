@@ -85,5 +85,10 @@ public class UserServiceImpl implements UserService {
     {
         return userRepository.findUserByUserName(name);
     }
+
+    @Override
+    public UserEntity findUserById(Integer id) {
+        return userRepository.findUserById(id);
+    }
 }
 

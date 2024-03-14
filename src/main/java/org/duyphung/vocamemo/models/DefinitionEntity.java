@@ -33,4 +33,11 @@ public class DefinitionEntity {
     public int hashCode() {
         return Objects.hash(id, definition, example);
     }
+
+    @Override
+    public String toString() {
+        return "DefinitionEntity{" +
+                "id=" + id +
+                '}';
+    }
 }

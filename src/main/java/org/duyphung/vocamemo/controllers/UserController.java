@@ -56,13 +56,6 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping("/home")
-    public String getHome()
-    {
-        log.info("home page displayed");
-        return "home";
-    }
-
     @PostMapping("/signup-process")
     public String signupProcess(@Valid @ModelAttribute("userDto") UserDTO userDTO, BindingResult bindingResult)
     {

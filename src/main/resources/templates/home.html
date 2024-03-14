@@ -23,6 +23,9 @@
             <button class="btn btn-sm btn-outline-success save-btn" data-toggle="tooltip" data-placement="top" title="Save"><i class="fas fa-save"></i></button>
         </li>
     </ul>
+
+    <div th:replace="fragments/words-list :: words-list-fragment"></div>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -39,5 +42,41 @@
         });
     });
 </script>
+<!-- Modal -->
+<div class="modal fade" id="wordModal" tabindex="-1" role="dialog" aria-labelledby="wordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="wordModalLabel">Word Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Text:</strong> <span id="wordText"></span></p>
+                <p><strong>Phonetic:</strong> <span id="wordPhonetic"></span></p>
+                <p><strong>Audio:</strong> <audio id="wordAudio" controls></audio></p>
+                <!-- Add more details as needed -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script th:inline="javascript">
+    $(function() {
+        $('#wordModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var word = button.data('word'); // Extract the WordEntity object
+
+            var modal = $(this);
+            modal.find('#wordText').text(word.text);
+            modal.find('#wordPhonetic').text(word.phonetic);
+            modal.find('#wordAudio').attr('src', word.audio);
+            // Update other elements as needed
+        });
+    });
+</script>
 </html>

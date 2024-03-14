@@ -33,12 +33,7 @@ public class WordEntity {
     @Column(name = "createdAt")
     private Timestamp createdAt;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "word_review",
-            joinColumns = @JoinColumn(name = "word_id"),
-            inverseJoinColumns = @JoinColumn(name = "review_id")
-    )
+    @ManyToMany(mappedBy = "words")
     private Set<ReviewEntity> reviews;
 
     @OneToMany(mappedBy = "wordEntity", cascade = CascadeType.ALL, orphanRemoval = true)

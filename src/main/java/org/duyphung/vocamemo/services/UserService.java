@@ -10,4 +10,6 @@ public interface UserService extends UserDetailsService {
     public void create(UserDTO userDTO);
     public UserEntity findUserByEmail(String email);
     public UserEntity findUserByName(String name);
+
+    UserEntity findUserById(Integer id);
 }

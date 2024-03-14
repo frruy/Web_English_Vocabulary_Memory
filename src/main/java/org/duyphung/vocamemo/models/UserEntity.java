@@ -11,8 +11,8 @@ import java.util.Set;
 @Table(name = "user")
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     private String userName;
 
@@ -67,6 +67,14 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, userName, firstName, lastName, email, phone, zip, password);
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                '}';
     }
 }
 

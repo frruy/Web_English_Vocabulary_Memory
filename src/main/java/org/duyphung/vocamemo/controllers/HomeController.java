@@ -1,27 +1,36 @@
 package org.duyphung.vocamemo.controllers;
 
+import org.duyphung.vocamemo.models.WordEntity;
 import org.duyphung.vocamemo.reponses.WordResponse;
 import org.duyphung.vocamemo.repositories.WordRepository;
 import org.duyphung.vocamemo.services.DictionaryService;
-import org.duyphung.vocamemo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/dictionary")
-public class DictionaryController {
+import java.util.Set;
 
-    @Autowired
-    private DictionaryService dictionaryService;
+@Controller
+public class HomeController {
+
+    private final DictionaryService dictionaryService;
 
     @Autowired
     private WordRepository wordRepository;
 
-    @Autowired
-    private UserService userService;
+    public HomeController(@Autowired DictionaryService dictionaryService) {
+        this.dictionaryService = dictionaryService;
+    }
+
+    @RequestMapping("/home")
+    public String getHomePage(Model model) {
+        Set<WordEntity> words = dictionaryService.getWords();
+        model.addAttribute("words", words);
+        return "home";
+    }
 
     @GetMapping("/search/{word}")
     public WordResponse searchWord(@PathVariable String word) {
@@ -30,8 +39,9 @@ public class DictionaryController {
         return response;
     }
 
-    @GetMapping("/find")
-    public void getWords() {
-        dictionaryService.getWords();
+    @GetMapping("/test")
+    public String getTest(Model model) {
+        model.addAttribute("selectedWord", wordRepository.findById(1));
+        return "home";
     }
 }

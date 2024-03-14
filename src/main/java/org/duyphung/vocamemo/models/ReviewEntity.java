@@ -17,11 +17,16 @@ public class ReviewEntity {
     private int id;
     @Column(name = "createdAt")
     private Timestamp createdAt;
-    @ManyToMany(mappedBy = "reviews")
-    private Set<WordEntity> words;
     @ManyToOne(targetEntity = UserEntity.class)
     private UserEntity user;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "review_word",
+            joinColumns = @JoinColumn(name = "review_id"),
+            inverseJoinColumns = @JoinColumn(name = "word_id")
+    )
+    private Set<WordEntity> words;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

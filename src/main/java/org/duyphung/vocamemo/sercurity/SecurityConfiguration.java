@@ -45,11 +45,11 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(
                         (auth) -> auth
-                                .requestMatchers("/", "/login*",
-                                        "/css/*", "/js/*", "/sign-up", "/signup-process", "/add-role").permitAll()
-                                .requestMatchers("/home").hasAnyRole("USER", "ADMIN")
-                                .anyRequest().authenticated()
-//                                .anyRequest().permitAll()
+//                                .requestMatchers("/", "/login*",
+//                                        "/css/*", "/js/*", "/sign-up", "/signup-process", "/add-role").permitAll()
+//                                .requestMatchers("/home").hasAnyRole("USER", "ADMIN")
+//                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
 
                 .formLogin(form -> form

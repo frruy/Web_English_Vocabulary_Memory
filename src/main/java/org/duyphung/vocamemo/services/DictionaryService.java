@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 @Service
 public class DictionaryService {
     private final WordRepository wordRepository;
+    @Autowired
+    private UserService userService;
     private static final String API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
     public DictionaryService(@Autowired WordRepository wordRepository) {
@@ -44,14 +46,16 @@ public class DictionaryService {
 
     public void saveWord(WordResponse wordResponse) {
         WordEntity wordEntity = mapToWordEntity(wordResponse);
-        wordEntity.addUser(SectionHelper.getUserFromSection());
+        UserEntity user = SectionHelper.getUserFromSection();
+        assert user != null;
+        var user1 = userService.findUserById(user.getId());
+        wordEntity.addUser(user1);
         wordRepository.save(wordEntity);
     }
 
-    public Set<WordEntity> getWord() {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(1);
-        return wordRepository.findTop5ByUsersIsOrderByCreatedAt(1);
+    public Set<WordEntity> getWords() {
+        var user = userService.findUserById(1);
+        return wordRepository.findTop5ByUsersOrderByCreatedAtDesc(Collections.singleton(user));
     }
 
     public WordEntity mapToWordEntity(WordResponse wordResponse) {

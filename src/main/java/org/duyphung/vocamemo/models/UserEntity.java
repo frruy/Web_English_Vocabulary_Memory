@@ -28,10 +28,10 @@ public class UserEntity {
 
     private String password;
 
-    @ManyToOne(targetEntity = RoleEntity.class)
+    @ManyToOne(targetEntity = RoleEntity.class, fetch = FetchType.EAGER)
     private RoleEntity role;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<WordEntity> words;
 
     public UserEntity(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {
@@ -74,6 +74,12 @@ public class UserEntity {
         return "UserEntity{" +
                 "id=" + id +
                 ", userName='" + userName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", zip='" + zip + '\'' +
+                ", role=" + role +
                 '}';
     }
 }

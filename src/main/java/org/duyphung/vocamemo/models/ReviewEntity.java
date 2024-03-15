@@ -17,10 +17,10 @@ public class ReviewEntity {
     private int id;
     @Column(name = "createdAt")
     private Timestamp createdAt;
-    @ManyToOne(targetEntity = UserEntity.class)
+    @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
     private UserEntity user;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "review_word",
             joinColumns = @JoinColumn(name = "review_id"),
@@ -37,5 +37,13 @@ public class ReviewEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, createdAt);
+    }
+
+    @Override
+    public String toString() {
+        return "ReviewEntity{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -33,13 +32,13 @@ public class WordEntity {
     @Column(name = "createdAt")
     private Timestamp createdAt;
 
-    @ManyToMany(mappedBy = "words")
+    @ManyToMany(mappedBy = "words", fetch = FetchType.EAGER)
     private Set<ReviewEntity> reviews;
 
-    @OneToMany(mappedBy = "wordEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "wordEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<MeaningEntity> meanings = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "word_user",
             joinColumns = @JoinColumn(name = "word_id"),
@@ -61,5 +60,20 @@ public class WordEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, audio, text, phonetic, isSaved, createdAt);
+    }
+
+    @Override
+    public String toString() {
+        return "WordEntity{" +
+                "id=" + id +
+                ", audio='" + audio + '\'' +
+                ", text='" + text + '\'' +
+                ", phonetic='" + phonetic + '\'' +
+                ", isSaved=" + isSaved +
+                ", createdAt=" + createdAt +
+                ", reviews=" + reviews +
+                ", meanings=" + meanings +
+                ", users=" + users +
+                '}';
     }
 }

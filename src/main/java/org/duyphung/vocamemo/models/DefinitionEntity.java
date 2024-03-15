@@ -18,7 +18,7 @@ public class DefinitionEntity {
     @Column(name = "example")
     private String example;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "meaning_id", nullable = false)
     private MeaningEntity meaningEntity;
 
@@ -38,6 +38,8 @@ public class DefinitionEntity {
     public String toString() {
         return "DefinitionEntity{" +
                 "id=" + id +
+                ", definition='" + definition + '\'' +
+                ", example='" + example + '\'' +
                 '}';
     }
 }

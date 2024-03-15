@@ -1,6 +1,6 @@
 package org.duyphung.vocamemo.repositories;
 
-import org.duyphung.vocamemo.models.UserEntity;
+import org.duyphung.vocamemo.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

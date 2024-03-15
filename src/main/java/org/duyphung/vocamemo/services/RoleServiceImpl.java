@@ -1,7 +1,7 @@
 package org.duyphung.vocamemo.services;
 
 
-import org.duyphung.vocamemo.models.RoleEntity;
+import org.duyphung.vocamemo.entities.RoleEntity;
 import org.duyphung.vocamemo.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

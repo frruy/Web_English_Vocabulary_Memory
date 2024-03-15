@@ -1,11 +1,8 @@
 package org.duyphung.vocamemo.services;
 
 
-import org.duyphung.vocamemo.models.ReviewEntity;
-import org.duyphung.vocamemo.models.RoleEntity;
+import org.duyphung.vocamemo.entities.ReviewEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public interface ReviewService {

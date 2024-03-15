@@ -1,6 +1,6 @@
 package org.duyphung.vocamemo.repositories;
 
-import org.duyphung.vocamemo.models.RoleEntity;
+import org.duyphung.vocamemo.entities.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

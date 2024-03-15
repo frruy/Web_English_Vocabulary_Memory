@@ -1,6 +1,6 @@
 package org.duyphung.vocamemo.repositories;
 
-import org.duyphung.vocamemo.models.ReviewEntity;
+import org.duyphung.vocamemo.entities.ReviewEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

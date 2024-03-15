@@ -1,6 +1,6 @@
 package org.duyphung.vocamemo.utils;
 
-import org.duyphung.vocamemo.models.UserEntity;
+import org.duyphung.vocamemo.entities.UserEntity;
 import org.duyphung.vocamemo.sercurity.UserPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

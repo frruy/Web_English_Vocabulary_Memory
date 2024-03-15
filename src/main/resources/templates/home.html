@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Search History</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
     <h1>Search History</h1>
-    <form th:action="@{/search}" method="get">
+    <form method="get" th:action="@{/search}">
         <div class="form-group">
-            <input type="text" class="form-control" name="query" placeholder="Enter your search query" required>
+            <input class="form-control" name="query" placeholder="Enter your search query" required type="text">
         </div>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
     </form>
     <hr>
     <h3>Search History</h3>
     <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center" th:each="search : ${searchHistory}">
+        <li class="list-group-item d-flex justify-content-between align-items-center"
+            th:each="search : ${searchHistory}">
             <span th:text="${search}"></span>
-            <button class="btn btn-sm btn-outline-success save-btn" data-toggle="tooltip" data-placement="top" title="Save"><i class="fas fa-save"></i></button>
+            <button class="btn btn-sm btn-outline-success save-btn" data-placement="top" data-toggle="tooltip"
+                    title="Save"><i class="fas fa-save"></i></button>
         </li>
     </ul>
 
@@ -32,50 +34,76 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
 
-        $('.save-btn').click(function() {
+        $('.save-btn').click(function () {
             var searchTerm = $(this).closest('.list-group-item').find('span').text();
             // Implement your save logic here
             console.log('Saved search term:', searchTerm);
         });
     });
 </script>
-<!-- Modal -->
-<div class="modal fade" id="wordModal" tabindex="-1" role="dialog" aria-labelledby="wordModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div aria-hidden="true" aria-labelledby="wordModalLabel" class="modal fade" id="wordModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="wordModalLabel">Word Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+            <div class="modal-header"><h5 class="modal-title" id="wordModalLabel">Word Details</h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p><strong>Text:</strong> <span id="wordText"></span></p>
-                <p><strong>Phonetic:</strong> <span id="wordPhonetic"></span></p>
-                <p><strong>Audio:</strong> <audio id="wordAudio" controls></audio></p>
-                <!-- Add more details as needed -->
+            <div class="modal-body"><h3 class="mb-2" id="wordText"></h3>
+                <p>
+                    <em class="text-muted" id="wordPhonetic"></em>
+                    <button class="btn btn-link ml-2" id="audioButton">
+                        <img alt="Speaker Icon" class="speaker-icon" th:src="@{/image/speaker.png}">
+                    </button>
+                </p>
+                <div id="meaningContainer"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script th:inline="javascript">
-    $(function() {
-        $('#wordModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var word = button.data('word'); // Extract the WordEntity object
+<script>
+    $(document).ready(function () {
+        $('#wordModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var word = button.data('word');
 
             var modal = $(this);
+
             modal.find('#wordText').text(word.text);
             modal.find('#wordPhonetic').text(word.phonetic);
-            modal.find('#wordAudio').attr('src', word.audio);
-            // Update other elements as needed
+
+            var audioButton = modal.find('#audioButton');
+            audioButton.on('click', function() {
+                var audio = new Audio(word.audio);
+                audio.play();
+            });
+
+            var meaningContainer = modal.find('#meaningContainer');
+            meaningContainer.empty();
+
+            $.each(word.meanings, function (index, meaning) {
+                var meaningElement = $('<div>').addClass('meaning');
+                var partOfSpeechElement = $('<p>').addClass('part-of-speech').text(meaning.partOfSpeech);
+                meaningElement.append(partOfSpeechElement);
+
+                console.log("meaningElement " + meaningElement)
+                console.log("partOfSpeechElement " + partOfSpeechElement)
+
+                var definitionList = $('<ul>').addClass('definition-list');
+                $.each(meaning.definitions, function (defIndex, definition) {
+                    var definitionItem = $('<li>').text(definition.definition);
+                    definitionList.append(definitionItem);
+                });
+
+                meaningElement.append(definitionList);
+                meaningContainer.append(meaningElement);
+            });
         });
     });
 </script>

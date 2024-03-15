@@ -2,8 +2,8 @@ package org.duyphung.vocamemo.services;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.duyphung.vocamemo.models.RoleEntity;
-import org.duyphung.vocamemo.models.UserEntity;
+import org.duyphung.vocamemo.entities.RoleEntity;
+import org.duyphung.vocamemo.entities.UserEntity;
 import org.duyphung.vocamemo.repositories.UserRepository;
 import org.duyphung.vocamemo.sercurity.UserDTO;
 import org.duyphung.vocamemo.sercurity.UserPrincipal;

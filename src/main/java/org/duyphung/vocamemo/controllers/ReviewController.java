@@ -1,6 +1,6 @@
 package org.duyphung.vocamemo.controllers;
 
-import org.duyphung.vocamemo.models.ReviewEntity;
+import org.duyphung.vocamemo.entities.ReviewEntity;
 import org.duyphung.vocamemo.repositories.WordRepository;
 import org.duyphung.vocamemo.services.ReviewService;
 import org.duyphung.vocamemo.utils.SectionHelper;

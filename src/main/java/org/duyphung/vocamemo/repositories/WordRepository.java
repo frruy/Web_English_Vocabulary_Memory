@@ -1,13 +1,12 @@
 package org.duyphung.vocamemo.repositories;
 
-import org.duyphung.vocamemo.models.UserEntity;
-import org.duyphung.vocamemo.models.WordEntity;
+import org.duyphung.vocamemo.entities.UserEntity;
+import org.duyphung.vocamemo.entities.WordEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Set;
 
 @Repository

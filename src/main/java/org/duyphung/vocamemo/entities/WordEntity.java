@@ -5,8 +5,11 @@ import com.google.gson.GsonBuilder;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.duyphung.vocamemo.adapters.WordEntityTypeAdapter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -41,7 +44,7 @@ public class WordEntity {
     @OneToMany(mappedBy = "wordEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<MeaningEntity> meanings = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "word_user",
             joinColumns = @JoinColumn(name = "word_id"),
@@ -51,6 +54,7 @@ public class WordEntity {
 
     public void addUser(UserEntity user) {
         users.add(user);
+        user.getWords().add(this);
     }
 
     @Override
@@ -70,20 +74,5 @@ public class WordEntity {
                 .registerTypeAdapter(WordEntity.class, new WordEntityTypeAdapter())
                 .create();
         return gson.toJson(this);
-    }
-
-    @Override
-    public String toString() {
-        return "WordEntity{" +
-                "id=" + id +
-                ", audio='" + audio + '\'' +
-                ", text='" + text + '\'' +
-                ", phonetic='" + phonetic + '\'' +
-                ", isSaved=" + isSaved +
-                ", createdAt=" + createdAt +
-                ", reviews=" + reviews +
-                ", meanings=" + meanings +
-                ", users=" + users +
-                '}';
     }
 }

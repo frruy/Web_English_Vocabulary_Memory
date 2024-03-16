@@ -3,7 +3,7 @@
   <ul class="list-group">
     <li class="list-group-item d-flex justify-content-between align-items-center" th:each="word : ${words}">
       <span th:text="${word.text}"></span>
-      <button class="btn btn-primary" data-toggle="modal" data-target="#wordModal" th:attr="data-word=${word.toJson()}">View Details</button>
+      <button class="btn btn-primary view-word-btn" data-toggle="modal" data-target="#wordModal" th:data-word="${word.toJson()}">View Details</button>
     </li>
   </ul>
 </th:block>

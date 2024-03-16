@@ -8,10 +8,9 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h1>Search History</h1>
-    <form method="get" th:action="@{/search}">
+    <form method="get" th:action="@{/search/{word}}">
         <div class="form-group">
-            <input class="form-control" name="query" placeholder="Enter your search query" required type="text">
+            <input class="form-control" name="word" placeholder="Enter your search query" required type="text">
         </div>
         <button class="btn btn-primary" type="submit">Search</button>
     </form>
@@ -30,28 +29,17 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-
-        $('.save-btn').click(function () {
-            var searchTerm = $(this).closest('.list-group-item').find('span').text();
-            // Implement your save logic here
-            console.log('Saved search term:', searchTerm);
-        });
-    });
-</script>
 <div aria-hidden="true" aria-labelledby="wordModalLabel" class="modal fade" id="wordModal" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title" id="wordModalLabel">Word Details</h5>
-                <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span>
+            <div class="modal-header">
+                <h5 class="modal-title" id="wordModalLabel">Word Details</h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body"><h3 class="mb-2" id="wordText"></h3>
+            <div class="modal-body">
+                <h3 class="mb-2" id="wordText"></h3>
                 <p>
                     <em class="text-muted" id="wordPhonetic"></em>
                     <button class="btn btn-link ml-2" id="audioButton">
@@ -66,20 +54,28 @@
         </div>
     </div>
 </div>
-</body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#wordModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var word = button.data('word');
+        $('[data-toggle="tooltip"]').tooltip();
 
-            var modal = $(this);
+        $('.save-btn').click(function () {
+            var searchTerm = $(this).closest('.list-group-item').find('span').text();
+            // Implement your save logic here
+            console.log('Saved search term:', searchTerm);
+        });
+
+        function populateWordModal(word) {
+            var modal = $('#wordModal');
 
             modal.find('#wordText').text(word.text);
             modal.find('#wordPhonetic').text(word.phonetic);
 
             var audioButton = modal.find('#audioButton');
-            audioButton.on('click', function() {
+            audioButton.off('click').on('click', function() {
                 var audio = new Audio(word.audio);
                 audio.play();
             });
@@ -92,8 +88,8 @@
                 var partOfSpeechElement = $('<p>').addClass('part-of-speech').text(meaning.partOfSpeech);
                 meaningElement.append(partOfSpeechElement);
 
-                console.log("meaningElement " + meaningElement)
-                console.log("partOfSpeechElement " + partOfSpeechElement)
+                console.log("meaningElement " + meaningElement);
+                console.log("partOfSpeechElement " + partOfSpeechElement);
 
                 var definitionList = $('<ul>').addClass('definition-list');
                 $.each(meaning.definitions, function (defIndex, definition) {
@@ -104,7 +100,43 @@
                 meaningElement.append(definitionList);
                 meaningContainer.append(meaningElement);
             });
+
+            modal.modal('show');
+        }
+
+        $('form').submit(function (event) {
+            event.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var word = form.find('input[name="word"]').val();
+
+            fetch(url.replace('{word}', word))
+                .then(function (response) {
+                    console.log("Response " + response);
+                    console.log("Response ok " + response.ok);
+                    if (response.ok) {
+                        return response.json().then(function (data) {
+                            console.log("Response data", data);
+                            return data;
+                        });
+                    } else {
+                        throw new Error('Error: ' + response.status);
+                    }
+                })
+                .then(function (data) {
+                    console.log("Response data 2", data);
+                    populateWordModal(data);
+                })
+                .catch(function (error) {
+                    console.log('Error:', error);
+                });
+        });
+
+        $('.view-word-btn').click(function () {
+            var word = $(this).data('word');
+            populateWordModal(word);
         });
     });
 </script>
+</body>
 </html>

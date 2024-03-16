@@ -12,7 +12,6 @@ import org.duyphung.vocamemo.reponses.MeaningResponse;
 import org.duyphung.vocamemo.reponses.PhoneticResponse;
 import org.duyphung.vocamemo.reponses.WordResponse;
 import org.duyphung.vocamemo.repositories.WordRepository;
-import org.duyphung.vocamemo.utils.SectionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,27 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class DictionaryService {
+public class WordService {
     private final WordRepository wordRepository;
     @Autowired
     private UserService userService;
     private static final String API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
-    public DictionaryService(@Autowired WordRepository wordRepository) {
+    public WordService(@Autowired WordRepository wordRepository) {
         this.wordRepository = wordRepository;
+    }
+
+    public WordEntity getOrCreateWordEntity(String word) {
+        WordEntity wordEntity = wordRepository.findByText(word);
+        if (wordEntity == null) {
+            wordEntity = createWordEntityFromResponse(word);
+        }
+        return wordEntity;
+    }
+
+    private WordEntity createWordEntityFromResponse(String word) {
+        WordResponse wordResponse = getWordResponse(word);
+        return saveWord(wordResponse);
     }
 
     public WordResponse getWordResponse(String word) {
@@ -44,13 +56,16 @@ public class DictionaryService {
         return responses[0];
     }
 
-    public void saveWord(WordResponse wordResponse) {
+    public WordEntity saveWord(WordResponse wordResponse) {
         WordEntity wordEntity = mapToWordEntity(wordResponse);
-        UserEntity user = SectionHelper.getUserFromSection();
-        assert user != null;
-        var user1 = userService.findUserById(user.getId());
+//        UserEntity user = SectionHelper.getUserFromSection();
+
+        UserEntity user1 = userService.findUserById(1);
+//        assert user != null;
+//        var user1 = userService.findUserById(user.getId());
         wordEntity.addUser(user1);
         wordRepository.save(wordEntity);
+        return wordEntity;
     }
 
     public Set<WordEntity> getWords() {
@@ -61,7 +76,6 @@ public class DictionaryService {
     public WordEntity mapToWordEntity(WordResponse wordResponse) {
         WordEntity wordEntity = new WordEntity();
         wordEntity.setText(wordResponse.getWord());
-        wordEntity.setPhonetic(wordResponse.getPhonetic());
 
         wordResponse.getPhonetics().stream()
                 .map(this::mapToPhoneticAndAudio)
@@ -83,9 +97,11 @@ public class DictionaryService {
     }
 
     private Map<String, String> mapToPhoneticAndAudio(PhoneticResponse phoneticResponse) {
-        if (phoneticResponse.getAudio().isEmpty() || phoneticResponse.getText().isEmpty())
+        if (phoneticResponse.getAudio() == null || phoneticResponse.getText() == null)
             return null;
-        else {
+        if (phoneticResponse.getAudio().isEmpty() || phoneticResponse.getText().isEmpty()) {
+            return null;
+        } else {
             Map<String, String> map = new HashMap<>();
             map.put("audio", phoneticResponse.getAudio());
             map.put("phonetic", phoneticResponse.getText());

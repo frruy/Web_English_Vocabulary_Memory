@@ -3,6 +3,7 @@ package org.duyphung.vocamemo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,8 +32,11 @@ public class UserEntity {
     @ManyToOne(targetEntity = RoleEntity.class, fetch = FetchType.EAGER)
     private RoleEntity role;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private Set<WordEntity> words;
+    @ManyToMany(mappedBy = "users")
+    private Set<WordEntity> words = new HashSet<>();
+
+    @OneToMany(mappedBy = "id.userId")
+    private Set<WordUser> wordUsers = new HashSet<>();
 
     public UserEntity(String userName, String firstName, String lastName, String email, String phone, String zip, String password ) {
         this.userName = userName;
@@ -47,14 +51,6 @@ public class UserEntity {
 
     public UserEntity() {
 
-    }
-
-    public void addWord(WordEntity wordEntity) {
-        words.add(wordEntity);
-    }
-
-    public void removeWord(WordEntity wordEntity) {
-        words.remove(wordEntity);
     }
 
     @Override

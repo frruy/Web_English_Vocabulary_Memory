@@ -4,30 +4,31 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.duyphung.vocamemo.adapters.WordEntityTypeAdapter;
 import org.duyphung.vocamemo.entities.WordEntity;
+import org.duyphung.vocamemo.reponses.WordResponse;
 import org.duyphung.vocamemo.repositories.WordRepository;
-import org.duyphung.vocamemo.services.DictionaryService;
+import org.duyphung.vocamemo.services.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
 @Controller
 public class HomeController {
 
-    private final DictionaryService dictionaryService;
+    private final WordService wordService;
 
     @Autowired
     private WordRepository wordRepository;
 
-    public HomeController(@Autowired DictionaryService dictionaryService) {
-        this.dictionaryService = dictionaryService;
+    public HomeController(@Autowired WordService wordService) {
+        this.wordService = wordService;
     }
 
     @RequestMapping("/home")
     public String getHomePage(Model model) {
-        Set<WordEntity> words = dictionaryService.getWords();
+        Set<WordEntity> words = wordService.getWords();
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(WordEntity.class, new WordEntityTypeAdapter())
                 .create();
@@ -36,10 +37,10 @@ public class HomeController {
         return "home";
     }
 
-//    @GetMapping("/search/{word}")
-//    public WordResponse searchWord(@PathVariable String word) {
-//        WordResponse response = dictionaryService.getWordResponse(word);
-//        dictionaryService.saveWord(response);
-//        return response;
-//    }
+    @GetMapping("/search/{word}")
+    @ResponseBody
+    public WordEntity searchWord(@PathVariable String word) {
+        WordEntity wordEntity = wordService.getOrCreateWordEntity(word);
+        return wordEntity;
+    }
 }

@@ -75,13 +75,14 @@
             modal.find('#wordPhonetic').text(word.phonetic);
 
             var audioButton = modal.find('#audioButton');
-            audioButton.off('click').on('click', function() {
+            audioButton.off('click').on('click', function () {
                 var audio = new Audio(word.audio);
                 audio.play();
             });
 
             var meaningContainer = modal.find('#meaningContainer');
             meaningContainer.empty();
+            console.log("word meanings: " + word.meanings)
 
             $.each(word.meanings, function (index, meaning) {
                 var meaningElement = $('<div>').addClass('meaning');
@@ -104,39 +105,41 @@
             modal.modal('show');
         }
 
+
         $('form').submit(function (event) {
             event.preventDefault();
-            var form = $(this);
-            var url = form.attr('action');
-            var word = form.find('input[name="word"]').val();
+            const form = $(this);
+            const url = form.attr('action');
+            const word = form.find('input[name="word"]').val();
 
             fetch(url.replace('{word}', word))
-                .then(function (response) {
-                    console.log("Response " + response);
-                    console.log("Response ok " + response.ok);
+                .then(async function (response) {
+                    console.log("Response", response);
+                    console.log("Response ok", response.ok);
                     if (response.ok) {
-                        return response.json().then(function (data) {
-                            console.log("Response data", data);
-                            return data;
-                        });
+                        const dataString = await response.text();
+                        console.log("dataString", dataString);
+                        const data = JSON.parse(dataString);
+                        console.log("data", data);
+                        populateWordModal(data);
                     } else {
+                        window.alert("An error occurred. Please try again later.");
                         throw new Error('Error: ' + response.status);
                     }
                 })
-                .then(function (data) {
-                    console.log("Response data 2", data);
-                    populateWordModal(data);
-                })
                 .catch(function (error) {
+                    window.alert("An error occurred. Please try again later.");
                     console.log('Error:', error);
                 });
         });
 
         $('.view-word-btn').click(function () {
             var word = $(this).data('word');
+            console.log("word on click view detail: " + word)
             populateWordModal(word);
         });
     });
+
 </script>
 </body>
 </html>

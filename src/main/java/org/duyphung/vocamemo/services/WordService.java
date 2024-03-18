@@ -12,6 +12,7 @@ import org.duyphung.vocamemo.reponses.MeaningResponse;
 import org.duyphung.vocamemo.reponses.PhoneticResponse;
 import org.duyphung.vocamemo.reponses.WordResponse;
 import org.duyphung.vocamemo.repositories.WordRepository;
+import org.duyphung.vocamemo.utils.SectionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -68,9 +69,9 @@ public class WordService {
         return wordEntity;
     }
 
-    public Set<WordEntity> getWords() {
-        var user = userService.findUserById(1);
-        return wordRepository.findTop5ByUsersOrderByCreatedAtDesc(Collections.singleton(user));
+    public Set<WordEntity> getTop7WordsByUserOrderedByUpdatedTime() {
+        int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
+        return wordRepository.findTop7WordsByUserIdOrderByUpdatedAtDesc(userId);
     }
 
     public WordEntity mapToWordEntity(WordResponse wordResponse) {

@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
 public interface WordRepository extends JpaRepository<WordEntity, Integer> {
-//    @Query("SELECT w FROM WordEntity w JOIN w.users u WHERE u IN :users ORDER BY w.updatedAt DESC LIMIT 10")
-    @Query("SELECT w FROM WordEntity w")
-    Set<WordEntity> findTop5ByUsersOrderByCreatedAtDesc(@Param("users") Set<UserEntity> users);
+    @Query("SELECT w FROM WordEntity w JOIN w.users u JOIN WordUser wu ON w.id = wu.id.wordId AND u.id = wu.id.userId WHERE u.id = :userId ORDER BY wu.updatedTime DESC")
+    Set<WordEntity> findTop7WordsByUserIdOrderByUpdatedAtDesc(@Param("userId") Integer userId);
     WordEntity findByText(@UniqueElements String text);
 }

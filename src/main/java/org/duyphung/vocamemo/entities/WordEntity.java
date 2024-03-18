@@ -54,7 +54,6 @@ public class WordEntity {
 
     public void addUser(UserEntity user) {
         users.add(user);
-        user.getWords().add(this);
     }
 
     @Override

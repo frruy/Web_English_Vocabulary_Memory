@@ -16,6 +16,7 @@ import org.duyphung.vocamemo.utils.SectionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -32,10 +33,15 @@ public class WordService {
         this.wordRepository = wordRepository;
     }
 
+    @Transactional
     public WordEntity getOrCreateWordEntity(String word) {
         WordEntity wordEntity = wordRepository.findByText(word);
         if (wordEntity == null) {
             wordEntity = createWordEntityFromResponse(word);
+        } else {
+            var user = SectionHelper.getUserFromSection();
+            assert user != null;
+            wordRepository.updateUpdatedTime(wordEntity.getId(), user.getId());
         }
         return wordEntity;
     }
@@ -59,12 +65,9 @@ public class WordService {
 
     public WordEntity saveWord(WordResponse wordResponse) {
         WordEntity wordEntity = mapToWordEntity(wordResponse);
-//        UserEntity user = SectionHelper.getUserFromSection();
-
-        UserEntity user1 = userService.findUserById(1);
-//        assert user != null;
-//        var user1 = userService.findUserById(user.getId());
-        wordEntity.addUser(user1);
+        UserEntity user = SectionHelper.getUserFromSection();
+        assert user != null;
+        wordEntity.addUser(user);
         wordRepository.save(wordEntity);
         return wordEntity;
     }

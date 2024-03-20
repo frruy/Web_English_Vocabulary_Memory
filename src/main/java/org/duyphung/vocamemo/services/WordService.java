@@ -34,21 +34,25 @@ public class WordService {
     }
 
     @Transactional
-    public WordEntity getOrCreateWordEntity(String word) {
+    public WordEntity getOrCreateWordEntityAndUpdateTime(String word) {
         WordEntity wordEntity = wordRepository.findByText(word);
         if (wordEntity == null) {
             wordEntity = createWordEntityFromResponse(word);
-        } else {
-            var user = SectionHelper.getUserFromSection();
-            assert user != null;
-            wordRepository.updateUpdatedTime(wordEntity.getId(), user.getId());
         }
+        var user = SectionHelper.getUserFromSection();
+        assert user != null;
+        wordRepository.updateUpdatedTime(wordEntity.getId(), user.getId());
         return wordEntity;
     }
 
     private WordEntity createWordEntityFromResponse(String word) {
         WordResponse wordResponse = getWordResponse(word);
         return saveWord(wordResponse);
+    }
+
+    public void changeWordHighlightStatus(int wordId, boolean isHighlight) {
+        int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
+        wordRepository.updateWordHighlightStatus(wordId, userId, isHighlight);
     }
 
     public WordResponse getWordResponse(String word) {
@@ -63,7 +67,7 @@ public class WordService {
         return responses[0];
     }
 
-    public WordEntity saveWord(WordResponse wordResponse) {
+    private WordEntity saveWord(WordResponse wordResponse) {
         WordEntity wordEntity = mapToWordEntity(wordResponse);
         UserEntity user = SectionHelper.getUserFromSection();
         assert user != null;
@@ -72,12 +76,29 @@ public class WordService {
         return wordEntity;
     }
 
-    public Set<WordEntity> getTop7WordsByUserOrderedByUpdatedTime() {
+    public Set<WordEntity> getWordsByUserOrderedByUpdatedTime() {
         int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
-        return wordRepository.findTop7WordsByUserIdOrderByUpdatedAtDesc(userId);
+//        Pageable pageable = PageRequest.of(0, 10, Sort.by("updatedTime").descending());
+//        Page<WordEntity> wordPage = wordRepository.findWordsByUserIdOrderByUpdatedTimeDesc(userId, pageable);
+        List<Object[]> resultList = wordRepository.findWordsByUserIdOrderByUpdatedAtDesc(userId);
+        Set<WordEntity> words = new HashSet<>();
+
+        for (Object[] result : resultList) {
+            WordEntity word = (WordEntity) result[0];
+            Boolean isHighlight = (Boolean) result[1];
+
+            word.setHighlight(isHighlight != null && isHighlight);
+            words.add(word);
+        }
+        return words;
     }
 
-    public WordEntity mapToWordEntity(WordResponse wordResponse) {
+    public Set<WordEntity> getTopWordsPriorityToReview() {
+        int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
+        return wordRepository.findWordsHighlightByUserIdOrderByReviewedAtAsc(userId);
+    }
+
+    private WordEntity mapToWordEntity(WordResponse wordResponse) {
         WordEntity wordEntity = new WordEntity();
         wordEntity.setText(wordResponse.getWord());
 

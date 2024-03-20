@@ -17,4 +17,7 @@ public class WordUser {
 
     @Column(name = "updated_time")
     private Timestamp updatedTime;
+
+    @Column(name = "is_highlight")
+    private Boolean isHighlight;
 }

@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Search History</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
@@ -54,7 +56,7 @@
         </div>
     </div>
 </div>
-
+</body>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -139,6 +141,57 @@
         });
     });
 
+    function toggleSaveWord(checkbox) {
+        const wordId = checkbox.getAttribute('data-word-id');
+        const isSaved = checkbox.checked;
+
+        fetch(`/words/${wordId}/save`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ isSaved: isSaved })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update word saved state');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle the error and revert the checkbox state if needed
+                checkbox.checked = !isSaved;
+            });
+    }
 </script>
-</body>
+
+<script>
+    function toggleSaveWord(checkbox) {
+        const wordId = checkbox.getAttribute('data-word-id');
+        console.log("wordId " + wordId);
+        console.log("checkbox.checked " + checkbox.checked);
+        const isHighlight = checkbox.checked;
+        console.log("toggleSaveWord");
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch(`/words/highlight/${wordId}?isHighlight=${isHighlight}`, {
+            method: 'PUT',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => {
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Failed to update word highlight state');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                checkbox.checked = !isHighlight;
+            });
+    }
+</script>
 </html>

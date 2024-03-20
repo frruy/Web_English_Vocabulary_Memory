@@ -1,10 +1,12 @@
 <th:block th:fragment="words-list-fragment">
-  <div id="words-list-container">
-    <h2>Words List</h2>
+  <div id="words-list-container" style="margin-bottom: 20px;">
     <ul class="list-group">
-      <li class="list-group-item d-flex justify-content-between align-items-center" th:each="word : ${words}">
-        <span th:text="${word.text}"></span>
-        <button class="btn btn-primary view-word-btn" data-toggle="modal" data-target="#wordModal" th:data-word="${word.toJson()}">View Details</button>
+      <li class="list-group-item d-flex justify-content-between align-items-center" th:each="word : ${words}" style="padding: 15px;">
+        <span class="word-text" th:text="${word.text}"></span>
+        <div class="word-actions d-flex align-items-center">
+          <button class="btn btn-primary view-word-btn" data-toggle="modal" data-target="#wordModal" th:data-word="${word.toJson()}" style="margin-left: 10px;">View Details</button>
+          <input type="checkbox" class="form-check-input" th:checked="${word.isHighlight}" th:data-word-id="${word.id}" onclick="toggleSaveWord(this)">
+        </div>
       </li>
     </ul>
   </div>

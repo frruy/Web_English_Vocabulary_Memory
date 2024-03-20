@@ -5,11 +5,8 @@ import com.google.gson.GsonBuilder;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.duyphung.vocamemo.adapters.WordEntityTypeAdapter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -32,8 +29,8 @@ public class WordEntity {
     @Column(name = "phonetic")
     private String phonetic;
 
-    @Column(name = "isSaved")
-    private boolean isSaved;
+    @Transient
+    private boolean isHighlight;
 
     @Column(name = "createdAt")
     private Timestamp createdAt;
@@ -60,12 +57,12 @@ public class WordEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof WordEntity that)) return false;
-        return id == that.id && isSaved == that.isSaved && Objects.equals(audio, that.audio) && Objects.equals(text, that.text) && Objects.equals(phonetic, that.phonetic) && Objects.equals(createdAt, that.createdAt);
+        return id == that.id && Objects.equals(audio, that.audio) && Objects.equals(text, that.text) && Objects.equals(phonetic, that.phonetic) && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, audio, text, phonetic, isSaved, createdAt);
+        return Objects.hash(id, audio, text, phonetic, createdAt);
     }
 
     public String toJson() {

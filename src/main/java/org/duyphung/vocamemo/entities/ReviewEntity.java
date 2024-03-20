@@ -15,8 +15,8 @@ public class ReviewEntity {
     @Id
     @Column(name = "id")
     private int id;
-    @Column(name = "createdAt")
-    private Timestamp createdAt;
+    @Column(name = "reviewed_at")
+    private Timestamp reviewedAt;
     @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
     private UserEntity user;
 
@@ -31,19 +31,11 @@ public class ReviewEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ReviewEntity that)) return false;
-        return id == that.id && Objects.equals(createdAt, that.createdAt);
+        return id == that.id && Objects.equals(reviewedAt, that.reviewedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdAt);
-    }
-
-    @Override
-    public String toString() {
-        return "ReviewEntity{" +
-                "id=" + id +
-                ", createdAt=" + createdAt +
-                '}';
+        return Objects.hash(id, reviewedAt);
     }
 }

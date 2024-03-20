@@ -21,7 +21,7 @@ public class WordEntityTypeAdapter extends TypeAdapter<WordEntity> {
         out.name("audio").value(word.getAudio());
         out.name("text").value(word.getText());
         out.name("phonetic").value(word.getPhonetic());
-        out.name("isSaved").value(word.isSaved());
+        out.name("isHighlight").value(word.isHighlight());
 //        out.name("createdAt").value(word.getCreatedAt().toString());
         out.name("meanings").beginArray();
         for (MeaningEntity meaning : word.getMeanings()) {
@@ -67,8 +67,8 @@ public class WordEntityTypeAdapter extends TypeAdapter<WordEntity> {
                 case "phonetic":
                     word.setPhonetic(in.nextString());
                     break;
-                case "isSaved":
-                    word.setSaved(in.nextBoolean());
+                case "isHighlight":
+                    word.setHighlight(in.nextBoolean());
                     break;
                 case "meanings":
                     word.setMeanings(readMeanings(in));

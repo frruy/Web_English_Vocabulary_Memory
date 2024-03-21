@@ -17,6 +17,11 @@ public class RoleEntity {
         this.name = name;
     }
 
+    public RoleEntity(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public RoleEntity() {
 
     }

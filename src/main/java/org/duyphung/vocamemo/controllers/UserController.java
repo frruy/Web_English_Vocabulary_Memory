@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
 /**
  * Controller class for handling user authentication.
  */
@@ -32,37 +33,25 @@ public class UserController {
     }
 
     @GetMapping("/")
-    private String redirectToLogin()
-    {
+    private String redirectToLogin() {
         return "redirect:/login";
     }
 
-
     @GetMapping("/sign-up")
-    public String signUp(Model model)
-    {
+    public String signUp(Model model) {
         model.addAttribute("userDto", new UserDTO());
         return "sign-up";
     }
 
-    /**
-     * In order to make code more readable  it is good practice to
-     * use special DTOs for login It also make controllers
-     * less dependent from entities and separate validation from
-     * jpa functionality
-     */
-    @GetMapping("/login")
-    public String getLoginPage()
-    {
-        log.info("Login page displayed");
-        return "login";
-    }
+//    @GetMapping("/login")
+//    public String getLoginPage() {
+//        log.info("Login page displayed");
+//        return "login";
+//    }
 
     @PostMapping("/signup-process")
-    public String signupProcess(@Valid @ModelAttribute("userDto") UserDTO userDTO, BindingResult bindingResult)
-    {
-        if(bindingResult.hasErrors())
-        {
+    public String signupProcess(@Valid @ModelAttribute("userDto") UserDTO userDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             log.warn("Wrong attempt");
             return "sign-up";
         }
@@ -74,5 +63,13 @@ public class UserController {
 
         userDetailsService.create(userDTO);
         return "confirmation";
+    }
+
+    @GetMapping("/login")
+    public String showLoginAfterLogout(@RequestParam(value = "logout", required = false) String logout, Model model) {
+        if (logout != null) {
+            model.addAttribute("logoutMessage", "You have been logged out successfully.");
+        }
+        return "login";
     }
 }

@@ -51,9 +51,18 @@ public class UserEntity {
         this.targetWordsPerDay = targetWordsPerDay;
     }
 
+    public UserEntity(int id, String userName, String email, String password) {
+        this.id = id;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
+
     public UserEntity() {
 
     }
+
+
 
     @Override
     public boolean equals(Object o) {

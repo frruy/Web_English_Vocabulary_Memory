@@ -60,6 +60,10 @@ public class SecurityConfiguration {
                 )
                 .logout(
                         logout -> logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessHandler((request, response, authentication) -> {
+                                    response.sendRedirect("/login?logout=true");
+                                })
                                 .invalidateHttpSession(true)
                                 .clearAuthentication(true)
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

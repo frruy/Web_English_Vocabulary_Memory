@@ -17,8 +17,12 @@
         </div>
     </form>
     <div class="d-flex justify-content-center mt-3">
-        <form method="get" th:action="@{/review}">
+        <form class="ml-2 mr-2" method="get" th:action="@{/review}">
             <button class="btn btn-secondary" type="submit">Review</button>
+        </form>
+
+        <form class="ml-2 mr-2" method="post" th:action="@{/logout}">
+            <button class="btn btn-danger" type="submit">Logout</button>
         </form>
     </div>
     <h3 class="mt-2">Search History</h3>

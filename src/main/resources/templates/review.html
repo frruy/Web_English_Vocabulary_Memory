@@ -2,27 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <title>Search History</title>
+    <title>Review</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
 </head>
 <body>
 <div class="container mt-5">
-    <form class="input-group" method="get" th:action="@{/search/{word}}">
-        <input class="form-control" name="word" placeholder="Enter your search query" required type="text">
-        <div class="input-group-append">
-            <button class="btn btn-primary" id="searchButton" type="submit">Search</button>
+    <h3>Review</h3>
+    <div th:replace="fragments/words-list-review :: words-list-fragment"></div>
+</div>
+<div class="container fixed-bottom mb-5">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <form id="doneForm" method="POST" th:action="@{/review/done}">
+                <input type="hidden" id="wordData" name="wordData" th:value="${wordData}">
+                <button class="btn btn-primary" type="submit">Done</button>
+            </form>
         </div>
-    </form>
-    <div class="d-flex justify-content-center mt-3">
-        <form method="get" th:action="@{/review}">
-            <button class="btn btn-secondary" type="submit">Review</button>
-        </form>
+        <div class="col-auto">
+            <button class="btn btn-secondary" id="cancelButton" onclick="window.location.href='/home'">Cancel</button>
+        </div>
     </div>
-    <h3 class="mt-2">Search History</h3>
-    <div th:replace="fragments/words-list :: words-list-fragment"></div>
 </div>
 
 <div aria-hidden="true" aria-labelledby="wordModalLabel" class="modal fade" id="wordModal" role="dialog" tabindex="-1">
@@ -56,6 +57,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
+        console.log("test")
+
         function populateWordModal(word) {
             var modal = $('#wordModal');
 
@@ -94,67 +97,33 @@
         }
 
 
-        $('searchButton').submit(function (event) {
-            event.preventDefault();
-            const form = $(this);
-            const url = form.attr('action');
-            const word = form.find('input[name="word"]').val();
-
-            fetch(url.replace('{word}', word))
-                .then(async function (response) {
-                    console.log("Response", response);
-                    console.log("Response ok", response.ok);
-                    if (response.ok) {
-                        const dataString = await response.text();
-                        console.log("dataString", dataString);
-                        const data = JSON.parse(dataString);
-                        console.log("data", data);
-                        populateWordModal(data);
-                    } else {
-                        throw new Error('Error: ' + response.status);
-                    }
-                })
-                .catch(function (error) {
-                    window.alert("An error occurred. Please try again later.");
-                    console.log('Error:', error);
-                });
-        });
-
         $('.view-word-btn').click(function () {
             var word = $(this).data('word');
             console.log("word on click view detail: " + word)
             populateWordModal(word);
         });
+
+        $('#doneForm').submit(function (event) {
+            event.preventDefault();
+
+            // Collect the word texts
+            var wordTexts = [];
+            $('.list-group-item').each(function () {
+                var wordText = $(this).find('.word-text').text();
+                console.log("word " + wordText)
+                wordTexts.push(wordText);
+            });
+
+            // Join the word texts into a comma-separated string
+            var wordTextsString = wordTexts.join(',');
+
+            // Set the word texts string in the hidden input field
+            $('#wordData').val(wordTextsString);
+
+            // Submit the form
+            this.submit();
+        });
     });
 </script>
 
-<script>
-    function toggleSaveWord(checkbox) {
-        const wordId = checkbox.getAttribute('data-word-id');
-        console.log("wordId " + wordId);
-        console.log("checkbox.checked " + checkbox.checked);
-        const isHighlight = checkbox.checked;
-        console.log("toggleSaveWord");
-
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-        fetch(`/words/highlight/${wordId}?isHighlight=${isHighlight}`, {
-            method: 'PUT',
-            headers: {
-                [csrfHeader]: csrfToken
-            }
-        })
-            .then(response => {
-                console.log(response);
-                if (!response.ok) {
-                    throw new Error('Failed to update word highlight state');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                checkbox.checked = !isHighlight;
-            });
-    }
-</script>
 </html>

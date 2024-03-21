@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -21,7 +22,7 @@ public class HomeController {
 
     @RequestMapping("/home")
     public String getHomePage(Model model) {
-        Set<WordEntity> words = wordService.getWordsByUserOrderedByUpdatedTime();
+        List<WordEntity> words = wordService.getWordsByUserOrderedBySearchTime();
         model.addAttribute("words", words);
         return "home";
     }

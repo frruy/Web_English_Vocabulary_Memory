@@ -32,12 +32,6 @@ public class WordEntity {
     @Transient
     private boolean isHighlight;
 
-    @Column(name = "createdAt")
-    private Timestamp createdAt;
-
-    @ManyToMany(mappedBy = "words", fetch = FetchType.EAGER)
-    private Set<ReviewEntity> reviews;
-
     @OneToMany(mappedBy = "wordEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<MeaningEntity> meanings = new HashSet<>();
 
@@ -57,12 +51,12 @@ public class WordEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof WordEntity that)) return false;
-        return id == that.id && Objects.equals(audio, that.audio) && Objects.equals(text, that.text) && Objects.equals(phonetic, that.phonetic) && Objects.equals(createdAt, that.createdAt);
+        return id == that.id && Objects.equals(audio, that.audio) && Objects.equals(text, that.text) && Objects.equals(phonetic, that.phonetic);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, audio, text, phonetic, createdAt);
+        return Objects.hash(id, audio, text, phonetic);
     }
 
     public String toJson() {
@@ -70,5 +64,16 @@ public class WordEntity {
                 .registerTypeAdapter(WordEntity.class, new WordEntityTypeAdapter())
                 .create();
         return gson.toJson(this);
+    }
+
+    @Override
+    public String toString() {
+        return "WordEntity{" +
+                "id=" + id +
+                ", audio='" + audio + '\'' +
+                ", text='" + text + '\'' +
+                ", phonetic='" + phonetic + '\'' +
+                ", isHighlight=" + isHighlight +
+                '}';
     }
 }

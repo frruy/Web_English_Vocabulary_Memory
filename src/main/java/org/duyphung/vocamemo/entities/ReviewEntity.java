@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,16 +18,21 @@ public class ReviewEntity {
     private int id;
     @Column(name = "reviewed_at")
     private Timestamp reviewedAt;
-    @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
-    private UserEntity user;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "review_word",
+            name = "review_word_user",
             joinColumns = @JoinColumn(name = "review_id"),
-            inverseJoinColumns = @JoinColumn(name = "word_id")
+            inverseJoinColumns = {
+                    @JoinColumn(name = "word_id", referencedColumnName = "word_id"),
+                    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+            }
     )
-    private Set<WordEntity> words;
+    private List<WordUser> wordUserSet;
+
+    @Transient
+    private List<WordEntity> words;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

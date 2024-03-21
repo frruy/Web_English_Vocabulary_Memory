@@ -3,10 +3,7 @@ package org.duyphung.vocamemo.services;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import org.duyphung.vocamemo.entities.DefinitionEntity;
-import org.duyphung.vocamemo.entities.MeaningEntity;
-import org.duyphung.vocamemo.entities.UserEntity;
-import org.duyphung.vocamemo.entities.WordEntity;
+import org.duyphung.vocamemo.entities.*;
 import org.duyphung.vocamemo.reponses.DefinitionResponse;
 import org.duyphung.vocamemo.reponses.MeaningResponse;
 import org.duyphung.vocamemo.reponses.PhoneticResponse;
@@ -14,6 +11,8 @@ import org.duyphung.vocamemo.reponses.WordResponse;
 import org.duyphung.vocamemo.repositories.WordRepository;
 import org.duyphung.vocamemo.utils.SectionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +40,16 @@ public class WordService {
         }
         var user = SectionHelper.getUserFromSection();
         assert user != null;
+        if (!wordEntity.getUsers().contains(user)) {
+            wordEntity.addUser(user);
+            wordRepository.save(wordEntity);
+        }
         wordRepository.updateUpdatedTime(wordEntity.getId(), user.getId());
         return wordEntity;
+    }
+
+    public List<WordEntity> getWordsByTexts(List<String> words) {
+        return wordRepository.findByTextIn(words);
     }
 
     private WordEntity createWordEntityFromResponse(String word) {
@@ -55,7 +62,7 @@ public class WordService {
         wordRepository.updateWordHighlightStatus(wordId, userId, isHighlight);
     }
 
-    public WordResponse getWordResponse(String word) {
+    private WordResponse getWordResponse(String word) {
         RestTemplate restTemplate = new RestTemplate();
         String url = API_URL + word;
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -76,12 +83,12 @@ public class WordService {
         return wordEntity;
     }
 
-    public Set<WordEntity> getWordsByUserOrderedByUpdatedTime() {
+    public List<WordEntity> getWordsByUserOrderedBySearchTime() {
         int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
 //        Pageable pageable = PageRequest.of(0, 10, Sort.by("updatedTime").descending());
 //        Page<WordEntity> wordPage = wordRepository.findWordsByUserIdOrderByUpdatedTimeDesc(userId, pageable);
-        List<Object[]> resultList = wordRepository.findWordsByUserIdOrderByUpdatedAtDesc(userId);
-        Set<WordEntity> words = new HashSet<>();
+        List<Object[]> resultList = wordRepository.findWordsByUserIdOrderByLastSearchTimeDesc(userId);
+        List<WordEntity> words = new ArrayList<>();
 
         for (Object[] result : resultList) {
             WordEntity word = (WordEntity) result[0];
@@ -93,9 +100,13 @@ public class WordService {
         return words;
     }
 
-    public Set<WordEntity> getTopWordsPriorityToReview() {
-        int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
-        return wordRepository.findWordsHighlightByUserIdOrderByReviewedAtAsc(userId);
+    public List<WordEntity> getTopWordsPriorityToReview() {
+        UserEntity userEntity = SectionHelper.getUserFromSection();
+        assert userEntity != null;
+        int userId = userEntity.getId();
+        int pageSize = userEntity.getTargetWordsPerDay(); // Specify the desired number of words per page
+        Pageable pageable = PageRequest.of(0, pageSize);
+        return wordRepository.findWordsHighlightByUserIdOrderByReviewedAt(userId, pageable);
     }
 
     private WordEntity mapToWordEntity(WordResponse wordResponse) {
@@ -151,5 +162,20 @@ public class WordService {
         definitionEntity.setDefinition(definitionResponse.getDefinition());
         definitionEntity.setExample(definitionResponse.getExample());
         return definitionEntity;
+    }
+
+    public List<WordUser> getWordUserByWords(List<WordEntity> words) {
+        List<Integer> wordIdSet = words.stream()
+                .map(WordEntity::getId)
+                .collect(Collectors.toList());
+        int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
+
+        return wordRepository.findWordUsersByWords(wordIdSet, userId);
+    }
+
+    public void updateReviewTime(List<WordEntity> words) {
+        List<Integer> wordIds = words.stream().map(WordEntity::getId).collect(Collectors.toList());
+        int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
+        wordRepository.updateReviewTime(wordIds, userId);
     }
 }

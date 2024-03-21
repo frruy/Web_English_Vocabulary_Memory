@@ -2,6 +2,7 @@ package org.duyphung.vocamemo.repositories;
 
 import org.duyphung.vocamemo.entities.WordEntity;
 import org.duyphung.vocamemo.entities.WordUser;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,4 +47,8 @@ public interface WordRepository extends JpaRepository<WordEntity, Integer> {
 
     @Query("SELECT wu FROM WordUser wu WHERE wu.id.userId = :userId AND wu.id.wordId IN :wordIds")
     List<WordUser> findWordUsersByWords(@Param("wordIds") List<Integer> wordIds, int userId);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM WordUser wu WHERE wu.id.wordId = :wordId AND wu.id.userId = :userId")
+    void deleteWordUserBy(@Param("wordId") int wordId, @Param("userId") int userId);
 }

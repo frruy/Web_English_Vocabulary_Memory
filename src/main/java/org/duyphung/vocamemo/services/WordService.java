@@ -178,4 +178,9 @@ public class WordService {
         int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
         wordRepository.updateReviewTime(wordIds, userId);
     }
+
+    public void deleteWordUserByWordId(int wordId) {
+        int userId = Objects.requireNonNull(SectionHelper.getUserFromSection()).getId();
+        wordRepository.deleteWordUserBy(wordId, userId);
+    }
 }

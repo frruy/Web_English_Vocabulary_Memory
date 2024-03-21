@@ -41,4 +41,10 @@ public class HomeController {
         wordService.changeWordHighlightStatus(wordId, isHighlight);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/delete/{wordId}")
+    public ResponseEntity<Void> deleteWordUser(@PathVariable int wordId) {
+        wordService.deleteWordUserByWordId(wordId);
+        return ResponseEntity.ok().build();
+    }
 }

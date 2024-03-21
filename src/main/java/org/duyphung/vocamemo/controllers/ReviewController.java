@@ -18,6 +18,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller class for handling review page.
+ */
 @Controller
 public class ReviewController {
     private final ReviewService reviewService;

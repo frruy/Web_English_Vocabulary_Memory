@@ -43,12 +43,6 @@ public class UserController {
         return "sign-up";
     }
 
-//    @GetMapping("/login")
-//    public String getLoginPage() {
-//        log.info("Login page displayed");
-//        return "login";
-//    }
-
     @PostMapping("/signup-process")
     public String signupProcess(@Valid @ModelAttribute("userDto") UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

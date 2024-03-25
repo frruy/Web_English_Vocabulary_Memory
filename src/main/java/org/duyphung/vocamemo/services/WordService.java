@@ -105,7 +105,7 @@ public class WordService {
         assert userEntity != null;
         int userId = userEntity.getId();
         int pageSize = userEntity.getTargetWordsPerDay(); // Specify the desired number of words per page
-        Pageable pageable = PageRequest.of(0, pageSize);
+        Pageable pageable = PageRequest.of(0, 3);
         return wordRepository.findWordsHighlightByUserIdOrderByReviewedAt(userId, pageable);
     }
 

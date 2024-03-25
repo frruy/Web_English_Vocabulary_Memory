@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container mt-5">
-    <form class="input-group" method="get" th:action="@{/search/{word}}">
+    <form class="input-group" method="get" th:action="@{/search}">
         <input class="form-control" name="word" placeholder="Enter your search query" required type="text">
         <div class="input-group-append">
             <button class="btn btn-primary" id="searchButton" type="submit">Search</button>
@@ -98,13 +98,14 @@
         }
 
 
-        $('searchButton').submit(function (event) {
+        $('#searchButton').click(function (event) {
+            console.log("searchButton clicked");
             event.preventDefault();
-            const form = $(this);
+            const form = $(this).closest('form');
             const url = form.attr('action');
             const word = form.find('input[name="word"]').val();
 
-            fetch(url.replace('{word}', word))
+            fetch(url + '?word=' + encodeURIComponent(word))
                 .then(async function (response) {
                     console.log("Response", response);
                     console.log("Response ok", response.ok);

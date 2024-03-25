@@ -29,9 +29,9 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/search/{word}")
+    @GetMapping("/search")
     @ResponseBody
-    public String searchWord(@PathVariable String word) {
+    public String searchWord(@RequestParam String word) {
         WordEntity wordEntity = wordService.getOrCreateWordEntityAndUpdateTime(word);
         return wordEntity.toJson();
     }

@@ -1,4 +1,4 @@
-# VocaMemo
+# VocaMemo Develop
 
 VocaMemo is a web application designed to help users memorize and review vocabulary words. It provides features for searching words, viewing word details, highlighting words, and reviewing words.
 
